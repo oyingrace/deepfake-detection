@@ -1,0 +1,12 @@
+# Inference API only (Render Docker)
+torch==2.2.2
+torchvision
+timm==1.0.27
+opencv-python==4.9.0.80
+mediapipe==0.10.21
+protobuf>=4.25,<5
+numpy==1.26.4
+pyyaml
+fastapi>=0.111.0
+uvicorn[standard]
+python-multipart>=0.0.9

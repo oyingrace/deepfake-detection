@@ -1,0 +1,26 @@
+# PGD + AAT training for local Mac (CPU/MPS). Slower than cpu_fast — start with 3 epochs.
+inherits:
+  - configs/train/cpu_fast.yaml
+
+project:
+  output_dir: outputs/aat
+
+train:
+  epochs: 5
+
+adv:
+  enabled: true
+  attack: pgd
+  eps: 0.03
+  alpha: 0.01
+  steps: 3          # fewer steps than full research config (7) for speed
+  clean_weight: 0.6
+  adv_weight: 0.4
+
+aat:
+  enabled: true
+  attention_consistency_weight: 0.2
+  blink_timing_weight: 0.1
+
+tracking:
+  use_wandb: false

@@ -1,0 +1,101 @@
+# --- Python ---
+.venv/
+.venv*/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Testing / linting / type-checking
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# --- Node / frontend ---
+node_modules/
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+# --- Environment & secrets ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- ML artifacts (large / generated) ---
+data/processed/
+*.npz
+
+# Model checkpoints — keep best.pt for deploy; ignore backups and other runs
+outputs/*
+!outputs/best.pt
+*.ckpt
+*.pth
+
+# HuggingFace / torch caches
+.cache/
+.huggingface/
+
+# --- Deploy bundle (created by deploy/sync_bundle.sh) ---
+deploy/api/
+deploy/src/
+deploy/configs/
+deploy/outputs/
+deploy/.env
+
+# --- OS & editor ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Logs ---
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Misc tooling ---
+.firecrawl/

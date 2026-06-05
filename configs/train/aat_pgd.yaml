@@ -1,0 +1,25 @@
+inherits:
+  - configs/base.yaml
+  - configs/model/lrcn_vit.yaml
+
+train:
+  epochs: 30
+  lr: 0.0001
+  weight_decay: 0.0001
+
+adv:
+  enabled: true
+  attack: pgd
+  eps: 0.03
+  alpha: 0.007
+  steps: 7
+  clean_weight: 0.6
+  adv_weight: 0.4
+
+aat:
+  enabled: true
+  attention_consistency_weight: 0.3
+  blink_timing_weight: 0.2
+  blink_min_seconds: 0.1
+  blink_max_seconds: 0.4
+  fps: 25

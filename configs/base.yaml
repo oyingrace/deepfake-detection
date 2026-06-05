@@ -1,0 +1,55 @@
+project:
+  name: enhanced-deepfake-detector
+  seed: 42
+  output_dir: outputs
+
+data:
+  metadata_csv: data/metadata.csv
+  processed_root: data/processed
+  sequence_length: 16
+  image_size: 224
+  batch_size: 8
+  num_workers: 4
+  split:
+    train: 0.7
+    val: 0.15
+    test: 0.15
+
+model:
+  backbone: vit_tiny_patch16_224
+  backbone_pretrained: true
+  feature_dim: 192
+  lstm_hidden: 256
+  lstm_layers: 2
+  dropout: 0.2
+  num_classes: 2
+
+train:
+  epochs: 20
+  lr: 0.0001
+  weight_decay: 0.0001
+  grad_clip: 1.0
+  mixed_precision: true
+  log_interval: 20
+
+adv:
+  enabled: true
+  attack: pgd
+  eps: 0.03
+  alpha: 0.007
+  steps: 5
+  fgsm_eps: 0.015
+  clean_weight: 0.7
+  adv_weight: 0.3
+
+aat:
+  enabled: true
+  attention_consistency_weight: 0.2
+  blink_timing_weight: 0.1
+  blink_min_seconds: 0.1
+  blink_max_seconds: 0.4
+  fps: 25
+
+tracking:
+  use_wandb: true
+  wandb_project: enhanced-deepfake-detector

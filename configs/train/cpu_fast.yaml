@@ -1,0 +1,51 @@
+project:
+  name: enhanced-deepfake-detector
+  seed: 42
+  output_dir: outputs
+
+data:
+  metadata_csv: data/metadata.csv
+  processed_root: data/processed
+  sequence_length: 8      # half the frames per sequence — 4x faster
+  image_size: 224
+  batch_size: 4
+  num_workers: 0          # avoids multiprocessing issues on Mac CPU
+
+model:
+  backbone: vit_tiny_patch16_224
+  backbone_pretrained: true
+  feature_dim: 192
+  lstm_hidden: 128
+  lstm_layers: 1
+  dropout: 0.3
+  num_classes: 2
+  use_blink_head: true
+
+train:
+  epochs: 10
+  lr: 0.0001
+  weight_decay: 0.0001
+  grad_clip: 1.0
+  mixed_precision: false  # no benefit on CPU
+
+adv:
+  enabled: false          # no adversarial training on CPU — add on GPU later
+  attack: pgd
+  eps: 0.03
+  alpha: 0.007
+  steps: 5
+  fgsm_eps: 0.015
+  clean_weight: 1.0
+  adv_weight: 0.0
+
+aat:
+  enabled: false          # no AAT without adversarial training
+  attention_consistency_weight: 0.2
+  blink_timing_weight: 0.1
+  blink_min_seconds: 0.1
+  blink_max_seconds: 0.4
+  fps: 25
+
+tracking:
+  use_wandb: false        # disable wandb for local CPU run
+  wandb_project: enhanced-deepfake-detector

@@ -1,0 +1,12 @@
+model:
+  name: lrcn_vit
+  backbone: vit_tiny_patch16_224
+  backbone_pretrained: true
+  freeze_backbone: false
+  feature_dim: 192
+  lstm_hidden: 256
+  lstm_layers: 2
+  dropout: 0.2
+  use_blink_head: true
+  blink_feature_dim: 4
+  num_classes: 2
