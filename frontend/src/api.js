@@ -1,5 +1,5 @@
-/** API base URL from Vercel env; empty in local dev (Vite proxy handles /predict). */
-const API_BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
+/** API base URL from Vercel env; empty uses same-origin paths (Vercel rewrites → Render). */
+export const API_BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
 
 export function apiUrl(path) {
   const normalized = path.startsWith("/") ? path : `/${path}`;

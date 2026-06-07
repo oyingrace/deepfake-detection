@@ -23,7 +23,14 @@ export default function App() {
       });
       setResult(data);
     } catch (e) {
-      setError(e.response?.data?.detail || e.message || "Something went wrong.");
+      const status = e.response?.status;
+      if (status === 404) {
+        setError(
+          "API not found (404). Redeploy the frontend after setting VITE_API_URL, or check vercel.json rewrites point to your Render URL."
+        );
+      } else {
+        setError(e.response?.data?.detail || e.message || "Something went wrong.");
+      }
     } finally {
       setIsLoading(false);
     }
