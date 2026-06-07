@@ -1,36 +1,31 @@
 #!/usr/bin/env bash
-# Link this repo to a Hugging Face Docker Space (run once after creating the Space on huggingface.co).
+# One-time push of this repo to your Hugging Face Docker Space.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-if [[ $# -lt 1 ]]; then
-  echo "Usage: $0 <hf-username>/deepfake-detection"
-  echo "Example: $0 oyingrace/deepfake-detection"
-  exit 1
+SPACE="${1:-DevQueen/deepfake-server}"
+
+if ! git remote get-url huggingface &>/dev/null; then
+  git remote add huggingface "https://huggingface.co/spaces/${SPACE}"
+  echo "Added remote: huggingface → https://huggingface.co/spaces/${SPACE}"
+else
+  echo "Remote 'huggingface' already exists."
 fi
-
-SPACE_ID="$1"
-
-if ! command -v git >/dev/null; then
-  echo "ERROR: git is required."
-  exit 1
-fi
-
-if ! command -v huggingface-cli >/dev/null; then
-  echo "Install the Hugging Face CLI first:"
-  echo "  pip install huggingface_hub[cli]"
-  echo "  huggingface-cli login"
-  exit 1
-fi
-
-echo "Adding Hugging Face Space remote: ${SPACE_ID}"
-git remote remove huggingface 2>/dev/null || true
-git remote add huggingface "https://huggingface.co/spaces/${SPACE_ID}"
 
 echo ""
-echo "Remote added. Push with:"
-echo "  git push huggingface main"
+echo "Next steps:"
 echo ""
-echo "Or connect GitHub in Space Settings → Repository (recommended — auto-deploy on push)."
+echo "1. Create a write token: https://huggingface.co/settings/tokens"
+echo ""
+echo "2. Login (one time):"
+echo "   pip install huggingface_hub[cli]"
+echo "   huggingface-cli login"
+echo ""
+echo "3. Push:"
+echo "   git push huggingface main"
+echo ""
+echo "Or use GitHub Actions (recommended): add HF_TOKEN secret on GitHub,"
+echo "then every 'git push origin main' auto-deploys the Space."
+echo "See huggingface/README.md"

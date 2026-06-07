@@ -11,7 +11,7 @@ license: mit
 
 # Deepfake Detector API
 
-FastAPI inference service for the [Enhanced Deepfake Detector](https://github.com/oyingrace/deepfake-detection) project (LRCN + ViT, blink-aware temporal modeling).
+FastAPI inference service for the Enhanced Deepfake Detector (LRCN + ViT, blink-aware temporal modeling).
 
 ## Endpoints
 
@@ -20,49 +20,76 @@ FastAPI inference service for the [Enhanced Deepfake Detector](https://github.co
 | `GET` | `/health` | Service status and model load state |
 | `POST` | `/predict` | Upload a video (multipart form field `file`) |
 
-## Deploy this Space from GitHub
+---
 
-### Option A — Repo root (recommended)
+## Deploy (GitHub → Space auto-sync) — recommended
 
-1. Create a **Docker** Space at [huggingface.co/new-space](https://huggingface.co/new-space).
-2. **Space Settings → Repository** → connect `oyingrace/deepfake-detection` (branch `main`).
-3. Leave **Root directory** empty. Hugging Face uses the root `Dockerfile`.
-4. Continue at step 4 below.
+Hugging Face Spaces **do not** have a “connect GitHub” button like Render.  
+Instead, use a **GitHub Action** that mirrors your repo to the Space on every push.
 
-### Option B — `huggingface/` subfolder (uses this README as the Space card)
+### One-time setup
 
-1. From the repo root: `./huggingface/sync_bundle.sh` then commit the synced files.
-2. Create a Docker Space and connect GitHub with **Root directory** = `huggingface`.
-3. Continue at step 4 below.
+1. **Create a Hugging Face token** (write access):  
+   https://huggingface.co/settings/tokens
 
-### Configure & test
+2. **Add it to GitHub** as a secret:  
+   Repo → **Settings → Secrets and variables → Actions → New repository secret**  
+   - Name: `HF_TOKEN`  
+   - Value: your HF token
 
-4. **Space Settings → Variables** (runtime):
+3. **Push this repo to GitHub** (includes `.github/workflows/sync-to-hf-space.yml`).
+
+4. Watch the Action run: GitHub → **Actions** → “Sync to Hugging Face Space”.
+
+5. When the build finishes, your API is at:
+
+   **https://devqueen-deepfake-server.hf.space**
+
+   (Check the exact URL on your Space page — it may differ slightly.)
+
+6. **Space Settings → Variables** (runtime):
 
    | Variable | Example |
    |----------|---------|
    | `ALLOWED_ORIGINS` | `https://your-app.vercel.app,http://localhost:5173` |
 
-5. Wait for the build (~5–10 min). Your API URL:
+7. Test:
 
-   `https://<your-username>-deepfake-detection.hf.space`
+   ```bash
+   curl https://devqueen-deepfake-server.hf.space/health
+   ```
 
-6. Test: `curl https://<your-username>-deepfake-detection.hf.space/health`
+---
+
+## Deploy (manual git push)
+
+If you prefer not to use GitHub Actions:
+
+```bash
+./scripts/setup_hf_space.sh DevQueen/deepfake-server
+huggingface-cli login          # paste write token
+git push huggingface main
+```
+
+Use a [write token](https://huggingface.co/settings/tokens) when prompted for a password.
+
+---
 
 ## Connect the Vercel frontend
 
-After the Space is live, update `frontend/vercel.json` rewrites to your HF URL:
+Update `frontend/vercel.json` rewrites to your HF Space URL:
 
 ```json
-"destination": "https://<your-username>-deepfake-detection.hf.space/predict"
+"destination": "https://devqueen-deepfake-server.hf.space/predict"
 ```
 
 Push to GitHub → Vercel redeploys.
 
-Or set `VITE_API_URL` on Vercel to the HF Space URL (and set `ALLOWED_ORIGINS` on the Space).
+---
 
 ## Notes
 
-- Free CPU tier: **16 GB RAM** (enough for PyTorch + MediaPipe inference).
-- Space sleeps after ~48 hours of inactivity; first request wakes it (may take 1–2 min).
-- Model weights: `outputs/best.pt` (~22 MB) are copied into the image at build time.
+- Free CPU tier: **16 GB RAM** (enough for PyTorch + MediaPipe).
+- Space sleeps after ~48h idle; first request may take 1–2 min to wake.
+- `outputs/best.pt` (~22 MB) is included in the Docker image at build time.
+- Render uses `deploy/Dockerfile`; Hugging Face uses the root `Dockerfile`.
