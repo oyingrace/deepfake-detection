@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { apiUrl } from "./api";
 import VideoUploader from "./components/VideoUploader";
 import ResultCard from "./components/ResultCard";
 import FrameChart from "./components/FrameChart";
@@ -16,7 +17,7 @@ export default function App() {
     try {
       const form = new FormData();
       form.append("file", file);
-      const { data } = await axios.post("/predict", form, {
+      const { data } = await axios.post(apiUrl("/predict"), form, {
         headers: { "Content-Type": "multipart/form-data" },
         timeout: 120_000,
       });

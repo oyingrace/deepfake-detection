@@ -12,33 +12,26 @@ Self-contained Docker build for the FastAPI inference API.
 | `sync_bundle.sh` | Copies `api/`, `src/`, `configs/`, `best.pt` from the repo root |
 | `api/`, `src/`, `configs/`, `outputs/` | Created by `sync_bundle.sh` (not always in git) |
 
-## Before first deploy
-
-From the **repo root**:
-
-```bash
-./deploy/sync_bundle.sh
-```
-
-Re-run after you change API code, model weights, or configs.
-
 ## Test locally
 
+From the **repo root** (Docker build context must be the repo root, not `deploy/`):
+
 ```bash
-cd deploy
-docker build -t deepfake-api .
+docker build -f deploy/Dockerfile -t deepfake-api .
 docker run -p 8000:8000 deepfake-api
 curl http://localhost:8000/health
 ```
 
+`sync_bundle.sh` is optional — only needed if you want a self-contained copy under `deploy/` for inspection; Render builds directly from the repo root.
+
 ## Render setup
 
-1. Push repo to GitHub (include `outputs/best.pt` or run sync in CI before build).
+1. Push repo to GitHub (must include `outputs/best.pt` at the repo root).
 2. Render → **New Web Service** → connect repo.
 3. Settings:
-   - **Root Directory:** `deploy`
+   - **Root Directory:** *(leave empty — repo root)*
    - **Environment:** Docker
-   - **Dockerfile Path:** `Dockerfile` (default)
+   - **Dockerfile Path:** `deploy/Dockerfile`
 4. **Environment variables:**
 
    | Key | Example |
