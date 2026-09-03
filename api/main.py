@@ -52,6 +52,11 @@ outputs_dir.mkdir(parents=True, exist_ok=True)
 app.mount("/outputs", StaticFiles(directory=str(outputs_dir)), name="outputs")
 
 
+@app.get("/")
+def root():
+    return {"service": "Deepfake Detector API", "health": "/health", "predict": "POST /predict"}
+
+
 @app.get("/health", response_model=HealthResponse)
 def health():
     return HealthResponse(status="ok", model_loaded=_state.get("model_loaded", False))

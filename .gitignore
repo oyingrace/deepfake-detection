@@ -97,5 +97,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# --- Misc tooling ---
-.firecrawl/
+# Synced Hugging Face bundle (only when using Option B subfolder deploy)
+huggingface/api/
+huggingface/src/
+huggingface/configs/
+huggingface/outputs/

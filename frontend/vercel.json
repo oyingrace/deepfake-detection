@@ -1,5 +1,19 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "rewrites": [
+    {
+      "source": "/predict",
+      "destination": "https://deepfake-server-hpuh.onrender.com/predict"
+    },
+    {
+      "source": "/health",
+      "destination": "https://deepfake-server-hpuh.onrender.com/health"
+    },
+    {
+      "source": "/outputs/:path*",
+      "destination": "https://deepfake-server-hpuh.onrender.com/outputs/:path*"
+    }
+  ]
 }

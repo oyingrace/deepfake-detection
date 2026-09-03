@@ -9,19 +9,13 @@ import seaborn as sns
 from sklearn.metrics import ConfusionMatrixDisplay, RocCurveDisplay, confusion_matrix, roc_curve
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--y-true", required=True, help="NumPy .npy path for ground truth labels")
-    parser.add_argument("--y-pred", required=True, help="NumPy .npy path for predicted labels")
-    parser.add_argument("--y-prob", required=True, help="NumPy .npy path for predicted probabilities")
-    parser.add_argument("--out-dir", required=True)
-    args = parser.parse_args()
-
-    out_dir = Path(args.out_dir)
+def save_evaluation_plots(
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    y_prob: np.ndarray,
+    out_dir: Path,
+) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
-    y_true = np.load(args.y_true)
-    y_pred = np.load(args.y_pred)
-    y_prob = np.load(args.y_prob)
 
     cm = confusion_matrix(y_true, y_pred)
     fig, ax = plt.subplots(figsize=(5, 5))
@@ -40,6 +34,22 @@ def main() -> None:
     fig.tight_layout()
     fig.savefig(out_dir / "roc_curve.png")
     plt.close(fig)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--y-true", required=True, help="NumPy .npy path for ground truth labels")
+    parser.add_argument("--y-pred", required=True, help="NumPy .npy path for predicted labels")
+    parser.add_argument("--y-prob", required=True, help="NumPy .npy path for predicted probabilities")
+    parser.add_argument("--out-dir", required=True)
+    args = parser.parse_args()
+
+    save_evaluation_plots(
+        np.load(args.y_true),
+        np.load(args.y_pred),
+        np.load(args.y_prob),
+        Path(args.out_dir),
+    )
 
 
 if __name__ == "__main__":
